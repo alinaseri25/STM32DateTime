@@ -2,7 +2,7 @@
 
 to use this lib you should be enable C99 Mode and Add --cpp to misc controls (in options for target --> C/C++ tab)
 
-then you can add library to your project and use it
+then you can add library to your project and use it (this Lib created on FreeRTOS and you can remove #include "cmsis_os.h" and replace osDelay to use without FreeRTOS)
 
 #include "DateTime.h"
 
@@ -11,7 +11,8 @@ DateTime _dt;
 
 and then use :
 
-DateTime(int16_t _year = 0,int8_t _month = 1,int8_t _day = 1,int8_t _hour = 0,int8_t _min = 0,int8_t _sec = 0);
+		DateTime(int16_t _year = 0,int8_t _month = 1,int8_t _day = 1,int8_t _hour = 0,int8_t _min = 0,int8_t _sec = 0);
+		void setCurrentDateTime(RTC_HandleTypeDef *_hrtc);
 		void setDateTime(int16_t _year,int8_t _month,int8_t _day,int8_t _hour,int8_t _min,int8_t _sec);
 		void setDate(uint16_t _year,int8_t _month,int8_t _day);
 		void setTime(int8_t _Sec,int8_t _Min,int8_t _hour);
@@ -29,7 +30,7 @@ DateTime(int16_t _year = 0,int8_t _month = 1,int8_t _day = 1,int8_t _hour = 0,in
 		uint8_t getMonth();
 		uint8_t getDay();
 		uint8_t getDayOfWeek();
-		const char *getDayOfWeekStr();
+		const char *getDayOfWeekStr(StrinDyOfWeekSize _SDOWS = Short);
 	
 		uint8_t getHour();
 		uint8_t getMinute();
