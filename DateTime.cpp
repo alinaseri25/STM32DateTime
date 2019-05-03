@@ -8,6 +8,17 @@ DateTime::DateTime(int16_t _year,int8_t _month,int8_t _day,int8_t _hour,int8_t _
 	DayofWeek = 1;
 }
 
+void DateTime::setCurrentDateTime(RTC_HandleTypeDef *_hrtc)
+{
+	RTC_DateTypeDef _date;
+	RTC_TimeTypeDef _time;
+	HAL_RTC_GetDate(_hrtc,&_date,RTC_FORMAT_BIN);
+	osDelay(1);
+	HAL_RTC_GetTime(_hrtc,&_time,RTC_FORMAT_BIN);
+	setDateTime(_date.Year,_date.Month,_date.Date,_time.Hours,_time.Minutes,_time.Seconds);
+	setDayOfWeek(_date.WeekDay);
+}
+
 void DateTime::setDateTime(int16_t _year,int8_t _month,int8_t _day,int8_t _hour,int8_t _min,int8_t _sec)
 {
 	if(_sec >= 60 || _sec < 0) _sec = 0;
@@ -119,26 +130,50 @@ uint8_t DateTime::getDayOfWeek()
 	return DayofWeek;
 }
 
-const char *DateTime::getDayOfWeekStr()
+const char *DateTime::getDayOfWeekStr(StrinDyOfWeekSize _SDOWS)
 {
 	switch(DayofWeek)
 	{
 		case 0:
-			return "Sunday";
+			if(_SDOWS == Full)
+				return "Sunday";
+			else
+				return "Su";
 		case 1:
-			return "Monday";
+			if(_SDOWS == Full)
+				return "Monday";
+			else
+				return "Mo";
 		case 2:
-			return "Tuesday";
+			if(_SDOWS == Full)
+				return "Tuesday";
+			else
+				return "Tu";
 		case 3:
-			return "Wednesday";
+			if(_SDOWS == Full)
+				return "Wednesday";
+			else
+				return "We";
 		case 4:
-			return "Thursday";
+			if(_SDOWS == Full)
+				return "Thursday";
+			else
+				return "Th";
 		case 5:
-			return "Friday";
+			if(_SDOWS == Full)
+				return "Friday";
+			else
+				return "Fr";
 		case 6:
-			return "Saturday";
+			if(_SDOWS == Full)
+				return "Saturday";
+			else
+				return "Sa";
 		default:
-			return "Not In Day's";
+			if(_SDOWS == Full)
+				return "Not In Day's";
+			else
+				return "NA";
 	}
 }
 

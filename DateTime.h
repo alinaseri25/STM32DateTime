@@ -2,16 +2,23 @@
 #define DateTime_H
 
 #include "stm32f1xx_hal.h"
-//#include <stdint.h>
+#include "cmsis_os.h"
 
 const uint8_t milmonth[12]={
 	31,28,31,30,31,30,31,31,30,31,30,31
 };
 
+typedef enum
+{
+	Full = 0x00,
+	Short
+}StrinDyOfWeekSize;
+
 class DateTime
 {
 	public:
 		DateTime(int16_t _year = 0,int8_t _month = 1,int8_t _day = 1,int8_t _hour = 0,int8_t _min = 0,int8_t _sec = 0);
+		void setCurrentDateTime(RTC_HandleTypeDef *_hrtc);
 		void setDateTime(int16_t _year,int8_t _month,int8_t _day,int8_t _hour,int8_t _min,int8_t _sec);
 		void setDate(uint16_t _year,int8_t _month,int8_t _day);
 		void setTime(int8_t _Sec,int8_t _Min,int8_t _hour);
@@ -29,7 +36,7 @@ class DateTime
 		uint8_t getMonth();
 		uint8_t getDay();
 		uint8_t getDayOfWeek();
-		const char *getDayOfWeekStr();
+		const char *getDayOfWeekStr(StrinDyOfWeekSize _SDOWS = Short);
 	
 		uint8_t getHour();
 		uint8_t getMinute();
