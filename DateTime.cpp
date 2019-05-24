@@ -1,7 +1,7 @@
 #include "DateTime.h"
 
 
-DateTime::DateTime(int16_t _year,int8_t _month,int8_t _day,int8_t _hour,int8_t _min,int8_t _sec)
+DateTime::DateTime(uint16_t _year,uint8_t _month,uint8_t _day,uint8_t _hour,uint8_t _min,uint8_t _sec)
 {
 	setDateTime(_year,_month,_day,_hour,_min,_sec);
 	LHour = LMinute = 0;
@@ -33,13 +33,13 @@ void DateTime::getCurrentDateTime(RTC_HandleTypeDef *_hrtc)
 	setDayOfWeek(_date.WeekDay);
 }
 
-void DateTime::setDateTime(int16_t _year,int8_t _month,int8_t _day,int8_t _hour,int8_t _min,int8_t _sec)
+void DateTime::setDateTime(uint16_t _year,uint8_t _month,uint8_t _day,uint8_t _hour,uint8_t _min,uint8_t _sec)
 {
-	if(_sec >= 60 || _sec < 0) _sec = 0;
+	if(_sec >= 60) _sec = 0;
 	Second = _sec;
-	if(_min >= 60 || _min < 0) _min = 0;
+	if(_min >= 60) _min = 0;
 	Minute = _min;
-	if(_hour >= 24 || _hour < 0) _hour = 0;
+	if(_hour >= 24) _hour = 0;
 	Hour = _hour;
 	
 	Year = _year;
@@ -49,14 +49,14 @@ void DateTime::setDateTime(int16_t _year,int8_t _month,int8_t _day,int8_t _hour,
 	Day = _day;
 }
 
-void DateTime::setDate(uint16_t _year,int8_t _month,int8_t _day)
+void DateTime::setDate(uint16_t _year,uint8_t _month,uint8_t _day)
 {
 	Year = _year;
 	Month = _month;
 	Day = _day;
 }
 
-void DateTime::setTime(int8_t _hour,int8_t _min,int8_t _sec)
+void DateTime::setTime(uint8_t _hour,uint8_t _min,uint8_t _sec)
 {
 	Hour = _hour;
 	Minute = _min;
@@ -104,44 +104,44 @@ uint8_t DateTime::getSecond()
 	return Second;
 }
 
-void DateTime::setYear(int16_t _year)
+void DateTime::setYear(uint16_t _year)
 {
 	Year = _year;
 }
 
-void DateTime::setMonth(int8_t _month)
+void DateTime::setMonth(uint8_t _month)
 {
 	if(_month > 12 || _month < 1) _month = 1;
 	Month = _month;
 }
 
-void DateTime::setDay(int8_t _day)
+void DateTime::setDay(uint8_t _day)
 {
 	if(_day > 31 || _day < 1) _day = 1;
 	Day = _day;
 }
 
-void DateTime::setHour(int8_t _hour)
+void DateTime::setHour(uint8_t _hour)
 {
-	if(_hour >= 24 || _hour < 0) _hour = 0;
+	if(_hour >= 24) _hour = 0;
 	Hour = _hour;
 }
 
-void DateTime::setMinute(int8_t _min)
+void DateTime::setMinute(uint8_t _min)
 {
-	if(_min >= 60 || _min < 0) _min = 0;
+	if(_min >= 60) _min = 0;
 	Minute = _min;
 }
 
-void DateTime::setSecond(int8_t _sec)
+void DateTime::setSecond(uint8_t _sec)
 {
-	if(_sec >= 60 || _sec < 0) _sec = 0;
+	if(_sec >= 60) _sec = 0;
 	Second = _sec;
 }
 
-void DateTime::setDayOfWeek(int8_t _dow)
+void DateTime::setDayOfWeek(uint8_t _dow)
 {
-    if(_dow > 6 || _dow < 0) _dow = 0;
+    if(_dow > 6) _dow = 0;
 	DayofWeek = _dow;
 }
 
@@ -217,30 +217,30 @@ bool DateTime::getLocalTime(int8_t *_hour,int8_t *_min)
     return LSign;
 }
 
-void DateTime::addSecond(int16_t _sec)
+void DateTime::addSecond(uint16_t _sec)
 {
-    int16_t temp = this->Second + _sec;
+    uint16_t temp = this->Second + _sec;
     addMinute(temp/60);
     this->Second = temp % 60;
 }
 
-void DateTime::addMinute(int16_t _min)
+void DateTime::addMinute(uint16_t _min)
 {
-    int16_t temp = this->Minute + _min;
+    uint16_t temp = this->Minute + _min;
     addHour(temp/60);
     this->Minute = temp % 60;
 }
 
-void DateTime::addHour(int16_t _hour)
+void DateTime::addHour(uint16_t _hour)
 {
-    int16_t temp = this->Hour + _hour;
+    uint16_t temp = this->Hour + _hour;
     addDay(temp/24);
     this->Hour = temp % 24;
 }
 
-void DateTime::addDay(int16_t _day)
+void DateTime::addDay(uint16_t _day)
 {
-    int16_t temp = this->Day + _day;
+    uint16_t temp = this->Day + _day;
     while (temp > milmonth[(this->Month - 1)]) {
         temp -= milmonth[(this->Month - 1)];
         addMonth(1);
@@ -248,14 +248,14 @@ void DateTime::addDay(int16_t _day)
     this->Day = temp;
 }
 
-void DateTime::addMonth(int16_t _month)
+void DateTime::addMonth(uint16_t _month)
 {
-    int16_t temp = this->Month + _month;
+    uint16_t temp = this->Month + _month;
     addYear(temp/12);
     this->Month = temp % 12;
 }
 
-void DateTime::addYear(int16_t _year)
+void DateTime::addYear(uint16_t _year)
 {
     this->Year += _year;
 }

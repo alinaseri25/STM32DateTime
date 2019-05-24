@@ -17,21 +17,21 @@ typedef enum
 class DateTime
 {
 	public:
-		DateTime(int16_t _year = 0,int8_t _month = 1,int8_t _day = 1,int8_t _hour = 0,int8_t _min = 0,int8_t _sec = 0);
+		DateTime(uint16_t _year = 0,uint8_t _month = 1,uint8_t _day = 1,uint8_t _hour = 0,uint8_t _min = 0,uint8_t _sec = 0);
 		void setCurrentDateTime(RTC_HandleTypeDef *_hrtc);
-		void setDateTime(int16_t _year,int8_t _month,int8_t _day,int8_t _hour,int8_t _min,int8_t _sec);
-		void setDate(uint16_t _year,int8_t _month,int8_t _day);
-		void setTime(int8_t _Sec,int8_t _Min,int8_t _hour);
+		void setDateTime(uint16_t _year,uint8_t _month,uint8_t _day,uint8_t _hour,uint8_t _min,uint8_t _sec);
+		void setDate(uint16_t _year,uint8_t _month,uint8_t _day);
+		void setTime(uint8_t _Sec,uint8_t _Min,uint8_t _hour);
 		void setUnixTime(uint64_t _UnixTime);
 	
-		void setYear(int16_t _year);
-		void setMonth(int8_t _month);
-		void setDay(int8_t _day);
-		void setDayOfWeek(int8_t _dow);
+		void setYear(uint16_t _year);
+		void setMonth(uint8_t _month);
+		void setDay(uint8_t _day);
+		void setDayOfWeek(uint8_t _dow);
 	
-		void setHour(int8_t _hour);
-		void setMinute(int8_t _min);
-		void setSecond(int8_t _sec);
+		void setHour(uint8_t _hour);
+		void setMinute(uint8_t _min);
+		void setSecond(uint8_t _sec);
 	
 		void getCurrentDateTime(RTC_HandleTypeDef *_hrtc);
 		uint16_t getYear();
@@ -50,13 +50,13 @@ class DateTime
 		void setLocalTime(int8_t _hour,int8_t _min,bool _sign);
 		bool getLocalTime(int8_t *_hour,int8_t *_min);
 
-		void addSecond(int16_t _sec);
-		void addMinute(int16_t _min);
-		void addHour(int16_t _hour);
+		void addSecond(uint16_t _sec);
+		void addMinute(uint16_t _min);
+		void addHour(uint16_t _hour);
 
-		void addDay(int16_t _day);
-		void addMonth(int16_t _month);
-		void addYear(int16_t _year);
+		void addDay(uint16_t _day);
+		void addMonth(uint16_t _month);
+		void addYear(uint16_t _year);
 		
 		DateTime operator=(DateTime _dt);
 		DateTime operator+(DateTime _dt);
