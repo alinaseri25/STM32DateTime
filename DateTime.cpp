@@ -12,6 +12,20 @@ void DateTime::setCurrentDateTime(RTC_HandleTypeDef *_hrtc)
 {
 	RTC_DateTypeDef _date;
 	RTC_TimeTypeDef _time;
+	_date.Year = Year - 2000;
+	_date.Month = Month;
+	_date.Date = Day;
+	HAL_RTC_SetDate(_hrtc,&_date,RTC_FORMAT_BIN);
+	_time.Hours = Hour;
+	_time.Minutes = Minute;
+	_time.Seconds = Second;
+	HAL_RTC_SetTime(_hrtc,&_time,RTC_FORMAT_BIN);
+}
+
+void DateTime::getCurrentDateTime(RTC_HandleTypeDef *_hrtc)
+{
+	RTC_DateTypeDef _date;
+	RTC_TimeTypeDef _time;
 	HAL_RTC_GetDate(_hrtc,&_date,RTC_FORMAT_BIN);
 	osDelay(1);
 	HAL_RTC_GetTime(_hrtc,&_time,RTC_FORMAT_BIN);
@@ -47,6 +61,12 @@ void DateTime::setTime(int8_t _hour,int8_t _min,int8_t _sec)
 	Hour = _hour;
 	Minute = _min;
 	Second = _sec;
+}
+
+void DateTime::setUnixTime(uint64_t _UnixtTime)
+{
+	UnixDateTime = _UnixtTime;
+	UnixToDateTime();
 }
 
 uint16_t DateTime::getYear()
@@ -175,6 +195,12 @@ const char *DateTime::getDayOfWeekStr(StrinDyOfWeekSize _SDOWS)
 			else
 				return "NA";
 	}
+}
+
+uint64_t DateTime::getUnixTime(void)
+{
+	DateTimeToUnix();
+	return UnixDateTime;
 }
 
 void DateTime::setLocalTime(int8_t _hour,int8_t _min,bool _sign)
@@ -474,4 +500,83 @@ bool DateTime::operator>=(DateTime _dt)
         return true;
 
     return true;
+}
+
+void DateTime::DateTimeToUnix(void)
+{
+	uint16_t y;
+	uint16_t m;
+	uint16_t d;
+
+	//Year
+	y = Year;
+	//Month of year
+	m = Month;
+	//Day of month
+	d = Day;
+
+	//January and February are counted as months 13 and 14 of the previous year
+	if(m <= 2)
+	{
+		 m += 12;
+		 y -= 1;
+	}
+	
+	//Convert years to days
+	UnixDateTime = (365 * y) + (y / 4) - (y / 100) + (y / 400);
+	//Convert months to days
+	UnixDateTime += (30 * m) + (3 * (m + 1) / 5) + d;
+	//Unix time starts on January 1st, 1970
+	UnixDateTime -= 719561;
+	//Convert days to seconds
+	UnixDateTime *= 86400;
+	//Add hours, minutes and seconds
+	UnixDateTime += (3600 * Hour) + (60 * Minute) + Second;
+}
+
+void DateTime::UnixToDateTime(void)
+{
+	uint32_t a;
+	uint32_t b;
+	uint32_t c;
+	uint32_t d;
+	uint32_t e;
+	uint32_t f;
+
+	//Negative Unix time values are not supported
+	if(UnixDateTime < 1)
+		 UnixDateTime = 0;
+
+	//Retrieve hours, minutes and seconds
+	Second = UnixDateTime % 60;
+	UnixDateTime /= 60;
+	Minute = UnixDateTime % 60;
+	UnixDateTime /= 60;
+	Hour = UnixDateTime % 24;
+	UnixDateTime /= 24;
+
+	//Convert Unix time to date
+	a = (uint32_t) ((4 * UnixDateTime + 102032) / 146097 + 15);
+	b = (uint32_t) (UnixDateTime + 2442113 + a - (a / 4));
+	c = (20 * b - 2442) / 7305;
+	d = b - 365 * c - (c / 4);
+	e = d * 1000 / 30601;
+	f = d - e * 30 - e * 601 / 1000;
+
+	//January and February are counted as months 13 and 14 of the previous year
+	if(e <= 13)
+	{
+		 c -= 4716;
+		 e -= 1;
+	}
+	else
+	{
+		 c -= 4715;
+		 e -= 13;
+	}
+
+	//Retrieve year, month and day
+	Year = c;
+	Month = e;
+	Day = f;
 }

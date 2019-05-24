@@ -22,6 +22,7 @@ class DateTime
 		void setDateTime(int16_t _year,int8_t _month,int8_t _day,int8_t _hour,int8_t _min,int8_t _sec);
 		void setDate(uint16_t _year,int8_t _month,int8_t _day);
 		void setTime(int8_t _Sec,int8_t _Min,int8_t _hour);
+		void setUnixTime(uint64_t _UnixTime);
 	
 		void setYear(int16_t _year);
 		void setMonth(int8_t _month);
@@ -32,11 +33,13 @@ class DateTime
 		void setMinute(int8_t _min);
 		void setSecond(int8_t _sec);
 	
+		void getCurrentDateTime(RTC_HandleTypeDef *_hrtc);
 		uint16_t getYear();
 		uint8_t getMonth();
 		uint8_t getDay();
 		uint8_t getDayOfWeek();
 		const char *getDayOfWeekStr(StrinDyOfWeekSize _SDOWS = Short);
+		uint64_t getUnixTime(void);
 	
 		uint8_t getHour();
 		uint8_t getMinute();
@@ -66,17 +69,21 @@ class DateTime
 		bool operator>=(DateTime _dt);
 
 	private:
-		int8_t Second;
-		int8_t Minute;
-		int8_t Hour;
+		void DateTimeToUnix(void);
+		void UnixToDateTime(void);
 	
-		int8_t Day;
-		int8_t Month;
-		int16_t Year;
-		int8_t DayofWeek;
+		uint8_t Second;
+		uint8_t Minute;
+		uint8_t Hour;
+	
+		uint8_t Day;
+		uint8_t Month;
+		uint16_t Year;
+		uint8_t DayofWeek;
 
 		int8_t LMinute;	
 		int8_t LHour;
+		uint64_t UnixDateTime;
 		bool LSign;   //true for + and false for -
 
 };
