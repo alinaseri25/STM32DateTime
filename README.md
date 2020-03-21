@@ -41,8 +41,8 @@ and then use :
 	
 		int8_t getYearFrom2000();
 		
-		void setLocalTime(int8_t _hour,int8_t _min,bool _sign);
-		bool getLocalTime(int8_t *_hour,int8_t *_min);
+		void setLocalTime(int32_t _LocalOffset);
+		int32_t getLocalTime(void);
 
 		void addSecond(uint16_t _sec);
 		void addMinute(uint16_t _min);
