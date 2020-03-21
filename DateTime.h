@@ -2,7 +2,7 @@
 #define DateTime_H
 
 #include "stm32f1xx_hal.h"
-#include "cmsis_os.h"
+//#include "cmsis_os.h"
 
 const uint8_t milmonth[12]={
 	31,28,31,30,31,30,31,31,30,31,30,31
@@ -18,7 +18,9 @@ class DateTime
 {
 	public:
 		DateTime(uint16_t _year = 0,uint8_t _month = 1,uint8_t _day = 1,uint8_t _hour = 0,uint8_t _min = 0,uint8_t _sec = 0);
+#ifdef HAL_RTC_MODULE_ENABLED
 		void setCurrentDateTime(RTC_HandleTypeDef *_hrtc);
+#endif
 		void setDateTime(uint16_t _year,uint8_t _month,uint8_t _day,uint8_t _hour,uint8_t _min,uint8_t _sec);
 		void setDate(uint16_t _year,uint8_t _month,uint8_t _day);
 		void setTime(uint8_t _Sec,uint8_t _Min,uint8_t _hour);
@@ -33,7 +35,9 @@ class DateTime
 		void setMinute(uint8_t _min);
 		void setSecond(uint8_t _sec);
 	
+#ifdef HAL_RTC_MODULE_ENABLED
 		void getCurrentDateTime(RTC_HandleTypeDef *_hrtc);
+#endif
 		uint16_t getYear();
 		uint8_t getMonth();
 		uint8_t getDay();
@@ -47,8 +51,8 @@ class DateTime
 	
 		int8_t getYearFrom2000();
 		
-		void setLocalTime(int8_t _hour,int8_t _min,bool _sign);
-		bool getLocalTime(int8_t *_hour,int8_t *_min);
+		void setLocalTime(int32_t _LocalOffset);
+		int32_t getLocalTime(void);
 
 		void addSecond(uint16_t _sec);
 		void addMinute(uint16_t _min);
@@ -81,10 +85,9 @@ class DateTime
 		uint16_t Year;
 		uint8_t DayofWeek;
 
-		int8_t LMinute;	
-		int8_t LHour;
+		int32_t LocalOffset;
+	
 		uint64_t UnixDateTime;
-		bool LSign;   //true for + and false for -
 
 };
 

@@ -4,10 +4,11 @@
 DateTime::DateTime(uint16_t _year,uint8_t _month,uint8_t _day,uint8_t _hour,uint8_t _min,uint8_t _sec)
 {
 	setDateTime(_year,_month,_day,_hour,_min,_sec);
-	LHour = LMinute = 0;
+	LocalOffset = 0;
 	DayofWeek = 1;
 }
 
+#ifdef HAL_RTC_MODULE_ENABLED
 void DateTime::setCurrentDateTime(RTC_HandleTypeDef *_hrtc)
 {
 	RTC_DateTypeDef _date;
@@ -21,17 +22,21 @@ void DateTime::setCurrentDateTime(RTC_HandleTypeDef *_hrtc)
 	_time.Seconds = Second;
 	HAL_RTC_SetTime(_hrtc,&_time,RTC_FORMAT_BIN);
 }
+#endif
 
+#ifdef HAL_RTC_MODULE_ENABLED
 void DateTime::getCurrentDateTime(RTC_HandleTypeDef *_hrtc)
 {
 	RTC_DateTypeDef _date;
 	RTC_TimeTypeDef _time;
 	HAL_RTC_GetDate(_hrtc,&_date,RTC_FORMAT_BIN);
-	osDelay(1);
+	//osDelay(1);
+	HAL_Delay(1);
 	HAL_RTC_GetTime(_hrtc,&_time,RTC_FORMAT_BIN);
 	setDateTime(_date.Year,_date.Month,_date.Date,_time.Hours,_time.Minutes,_time.Seconds);
 	setDayOfWeek(_date.WeekDay);
 }
+#endif
 
 void DateTime::setDateTime(uint16_t _year,uint8_t _month,uint8_t _day,uint8_t _hour,uint8_t _min,uint8_t _sec)
 {
@@ -203,18 +208,14 @@ uint64_t DateTime::getUnixTime(void)
 	return UnixDateTime;
 }
 
-void DateTime::setLocalTime(int8_t _hour,int8_t _min,bool _sign)
+void DateTime::setLocalTime(int32_t _LocalOffset)
 {
-	LHour = _hour;
-	LMinute = _min;
-	LSign = _sign;
+	LocalOffset = _LocalOffset;
 }
 
-bool DateTime::getLocalTime(int8_t *_hour,int8_t *_min)
+int32_t DateTime::getLocalTime(void)
 {
-	*_hour = LHour;
-	*_min = LMinute;
-    return LSign;
+	return LocalOffset;
 }
 
 void DateTime::addSecond(uint16_t _sec)
@@ -272,7 +273,7 @@ DateTime DateTime::operator=(DateTime _dt)
 	this->Month = _dt.getMonth();
 	this->Year = _dt.getYear();
 	
-	this->LSign = _dt.getLocalTime(&this->LHour,&this->LMinute);
+	this->LocalOffset = _dt.getLocalTime();
 	
     return *this;
 }
@@ -322,12 +323,7 @@ bool DateTime::operator==(DateTime _dt)
 	if(this->Year != _dt.getYear())
 		return false;
 	
-	int8_t h,m;
-	if(this->LSign != _dt.getLocalTime(&h,&m))
-		return false;
-	if(this->LHour != h)
-		return false;
-	if(this->LMinute != m)
+	if(this->LocalOffset != _dt.getLocalTime())
 		return false;
 	
 	return true;
@@ -351,12 +347,7 @@ bool DateTime::operator!=(DateTime _dt)
 	if(this->Year != _dt.getYear())
 		return true;
 	
-	int8_t h,m;
-	if(this->LSign != _dt.getLocalTime(&h,&m))
-		return true;
-	if(this->LHour != h)
-		return true;
-	if(this->LMinute != m)
+	if(this->LocalOffset != _dt.getLocalTime())
 		return true;
 	
     return false;
