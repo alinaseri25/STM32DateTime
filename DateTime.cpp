@@ -68,8 +68,12 @@ void DateTime::setTime(uint8_t _hour,uint8_t _min,uint8_t _sec)
 	Second = _sec;
 }
 
-void DateTime::setUnixTime(uint64_t _UnixtTime)
+void DateTime::setUnixTime(uint64_t _UnixtTime,bool _IsUTCTime)
 {
+	if(_IsUTCTime)
+	{
+		_UnixtTime += LocalOffset;
+	}
 	UnixDateTime = _UnixtTime;
 	UnixToDateTime();
 }
@@ -202,10 +206,15 @@ const char *DateTime::getDayOfWeekStr(StrinDyOfWeekSize _SDOWS)
 	}
 }
 
-uint64_t DateTime::getUnixTime(void)
+uint64_t DateTime::getUnixTime(bool _IsUTCTime)
 {
+	uint64_t TempTime = UnixDateTime;
 	DateTimeToUnix();
-	return UnixDateTime;
+	if(_IsUTCTime)
+	{
+		TempTime -= LocalOffset;
+	}
+	return TempTime;
 }
 
 void DateTime::setLocalTime(int32_t _LocalOffset)
