@@ -16,7 +16,7 @@ and then use :
 		void setDateTime(uint16_t _year,uint8_t _month,uint8_t _day,uint8_t _hour,uint8_t _min,uint8_t _sec);
 		void setDate(uint16_t _year,uint8_t _month,uint8_t _day);
 		void setTime(uint8_t _Sec,uint8_t _Min,uint8_t _hour);
-		void setUnixTime(uint64_t _UnixTime);
+		void setUnixTime(uint64_t _UnixTime,bool _IsUTCTime = false);
 	
 		void setYear(uint16_t _year);
 		void setMonth(uint8_t _month);
@@ -33,7 +33,7 @@ and then use :
 		uint8_t getDay();
 		uint8_t getDayOfWeek();
 		const char *getDayOfWeekStr(StrinDyOfWeekSize _SDOWS = Short);
-		uint64_t getUnixTime(void);
+		uint64_t getUnixTime(bool _IsUTCTime = false);
 	
 		uint8_t getHour();
 		uint8_t getMinute();
