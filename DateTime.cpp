@@ -33,7 +33,7 @@ void DateTime::getCurrentDateTime(RTC_HandleTypeDef *_hrtc)
 	//osDelay(1);
 	HAL_Delay(1);
 	HAL_RTC_GetTime(_hrtc,&_time,RTC_FORMAT_BIN);
-	setDateTime(_date.Year,_date.Month,_date.Date,_time.Hours,_time.Minutes,_time.Seconds);
+	setDateTime(_date.Year + 2000,_date.Month,_date.Date,_time.Hours,_time.Minutes,_time.Seconds);
 	setDayOfWeek(_date.WeekDay);
 }
 #endif
@@ -208,8 +208,9 @@ const char *DateTime::getDayOfWeekStr(StrinDyOfWeekSize _SDOWS)
 
 uint64_t DateTime::getUnixTime(bool _IsUTCTime)
 {
-	uint64_t TempTime = UnixDateTime;
+	uint64_t TempTime;
 	DateTimeToUnix();
+	TempTime = UnixDateTime;
 	if(_IsUTCTime)
 	{
 		TempTime -= LocalOffset;
@@ -502,7 +503,7 @@ bool DateTime::operator>=(DateTime _dt)
     return true;
 }
 
-void DateTime::DateTimeToUnix(void)
+void DateTime::DateTimeToUnix(bool IsUnixTime)
 {
 	uint16_t y;
 	uint16_t m;
@@ -526,15 +527,23 @@ void DateTime::DateTimeToUnix(void)
 	UnixDateTime = (365 * y) + (y / 4) - (y / 100) + (y / 400);
 	//Convert months to days
 	UnixDateTime += (30 * m) + (3 * (m + 1) / 5) + d;
-	//Unix time starts on January 1st, 1970
-	UnixDateTime -= 719561;
+	if(IsUnixTime)
+	{
+		//Unix time starts on January 1st, 1970
+		UnixDateTime -= 719561;
+	}
+	else
+	{
+		//Unix time starts on January 1st, 1900
+		UnixDateTime -= 693994;
+	}
 	//Convert days to seconds
 	UnixDateTime *= 86400;
 	//Add hours, minutes and seconds
 	UnixDateTime += (3600 * Hour) + (60 * Minute) + Second;
 }
 
-void DateTime::UnixToDateTime(void)
+void DateTime::UnixToDateTime(bool IsUnixTime)
 {
 	uint32_t a;
 	uint32_t b;
@@ -564,14 +573,25 @@ void DateTime::UnixToDateTime(void)
 	f = d - e * 30 - e * 601 / 1000;
 
 	//January and February are counted as months 13 and 14 of the previous year
+	uint32_t TimeToMinus;
+	if(IsUnixTime)
+	{
+		//Unix time starts on January 1st, 1970
+		TimeToMinus = 4716;
+	}
+	else
+	{
+		//Unix time starts on January 1st, 1900
+		TimeToMinus = 4786;
+	}
 	if(e <= 13)
 	{
-		 c -= 4716;
+		 c -= TimeToMinus;
 		 e -= 1;
 	}
 	else
 	{
-		 c -= 4715;
+		 c -= (TimeToMinus - 1);
 		 e -= 13;
 	}
 

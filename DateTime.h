@@ -73,8 +73,8 @@ class DateTime
 		bool operator>=(DateTime _dt);
 
 	private:
-		void DateTimeToUnix(void);
-		void UnixToDateTime(void);
+		void DateTimeToUnix(bool IsUnixTime = true);
+		void UnixToDateTime(bool IsUnixTime = true);
 	
 		uint8_t Second;
 		uint8_t Minute;
