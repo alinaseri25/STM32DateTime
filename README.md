@@ -12,7 +12,9 @@ DateTime _dt;
 and then use :
 
 		DateTime(uint16_t _year = 0,uint8_t _month = 1,uint8_t _day = 1,uint8_t _hour = 0,uint8_t _min = 0,uint8_t _sec = 0);
+#ifdef HAL_RTC_MODULE_ENABLED
 		void setCurrentDateTime(RTC_HandleTypeDef *_hrtc);
+#endif
 		void setDateTime(uint16_t _year,uint8_t _month,uint8_t _day,uint8_t _hour,uint8_t _min,uint8_t _sec);
 		void setDate(uint16_t _year,uint8_t _month,uint8_t _day);
 		void setTime(uint8_t _Sec,uint8_t _Min,uint8_t _hour);
@@ -27,12 +29,14 @@ and then use :
 		void setMinute(uint8_t _min);
 		void setSecond(uint8_t _sec);
 	
+#ifdef HAL_RTC_MODULE_ENABLED
 		void getCurrentDateTime(RTC_HandleTypeDef *_hrtc);
+#endif
 		uint16_t getYear();
 		uint8_t getMonth();
 		uint8_t getDay();
 		uint8_t getDayOfWeek();
-		const char *getDayOfWeekStr(StrinDyOfWeekSize _SDOWS = Short);
+		const char *getDayOfWeekStr(StringDyOfWeekSize _SDOWS = Short);
 		uint64_t getUnixTime(bool _IsUTCTime = false);
 	
 		uint8_t getHour();
@@ -43,6 +47,8 @@ and then use :
 		
 		void setLocalTime(int32_t _LocalOffset);
 		int32_t getLocalTime(void);
+		
+		uint32_t getSecsInDay(void);
 
 		void addSecond(uint16_t _sec);
 		void addMinute(uint16_t _min);
