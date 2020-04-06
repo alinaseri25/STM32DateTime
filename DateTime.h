@@ -12,7 +12,7 @@ typedef enum
 {
 	Full = 0x00,
 	Short
-}StrinDyOfWeekSize;
+}StringDyOfWeekSize;
 
 class DateTime
 {
@@ -42,7 +42,7 @@ class DateTime
 		uint8_t getMonth();
 		uint8_t getDay();
 		uint8_t getDayOfWeek();
-		const char *getDayOfWeekStr(StrinDyOfWeekSize _SDOWS = Short);
+		const char *getDayOfWeekStr(StringDyOfWeekSize _SDOWS = Short);
 		uint64_t getUnixTime(bool _IsUTCTime = false);
 	
 		uint8_t getHour();
@@ -53,6 +53,8 @@ class DateTime
 		
 		void setLocalTime(int32_t _LocalOffset);
 		int32_t getLocalTime(void);
+		
+		uint32_t getSecsInDay(void);
 
 		void addSecond(uint16_t _sec);
 		void addMinute(uint16_t _min);
@@ -76,6 +78,8 @@ class DateTime
 		void DateTimeToUnix(bool IsUnixTime = true);
 		void UnixToDateTime(bool IsUnixTime = true);
 	
+		void setSecInDay(void);
+	
 		uint8_t Second;
 		uint8_t Minute;
 		uint8_t Hour;
@@ -88,6 +92,7 @@ class DateTime
 		int32_t LocalOffset;
 	
 		uint64_t UnixDateTime;
+		uint32_t SecsInDay;
 
 };
 
